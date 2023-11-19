@@ -2,6 +2,7 @@ package com.decify.joblisting.controller;
 
 import com.decify.joblisting.model.JobPost;
 import com.decify.joblisting.repo.JobPostRepository;
+import com.decify.joblisting.repo.SearchRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
@@ -16,10 +17,18 @@ public class JobPostController {
     @Autowired
     JobPostRepository postRepository;
 
+    @Autowired
+    SearchRepository searchRepository;
+
     @ApiIgnore
     @RequestMapping(value = "/")
     private void redirect(HttpServletResponse response) throws IOException {
         response.sendRedirect("/swagger-ui.html");
+    }
+
+    @GetMapping("/posts/{searchKey}")
+    private List<JobPost> searchJobPost(@PathVariable String searchKey) {
+        return searchRepository.findBySearchKey(searchKey);
     }
 
     @GetMapping("/posts")
